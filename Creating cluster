@@ -1,0 +1,27 @@
+Creating Kubernets cluster with kubeadm
+
+
+--------
+
+kubeadm init
+
+it will deploy all services as a pods and will print kubeadm join command which will be used to add the worker node to the master
+
+Step 1 - Retrieve Token CA Hash:
+
+openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt \
+    | openssl rsa -pubin -outform der 2>/dev/null \
+    | openssl dgst -sha256 -hex \
+    | sed 's/^.* //'
+	
+	
+	Step 2 - Retrieve bootstrap Tokens:
+	kubeadm token list
+	
+	Step 3 - Creates kubeadm init command:
+	
+	kubeadm join <ip-address>:6443\
+    --token=<token-from-step-2> \
+    --discovery-token-ca-cert-hash sha256:<ca-hash-from-step-1>
+	
+	kubeadm token create --print-join-command
